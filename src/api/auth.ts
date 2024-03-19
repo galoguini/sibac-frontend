@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const apiURL = axios.create({
     baseURL: "http://127.0.0.1:8000/api/v1/usuarios/"
@@ -7,7 +8,7 @@ const apiURL = axios.create({
 export const login = async (username: string, password: string) => {
     try {
         const response = await apiURL.post("login/", { username, password });
-        localStorage.setItem('authToken', response.data.token); 
+        Cookies.set('authToken', response.data.token);
         return response.data;
     } catch (error) {
         throw error;
@@ -25,16 +26,21 @@ export const registro = async (username: string, first_name: string, last_name:s
 
 export const logout = async () => {
     try {
-        const token = localStorage.getItem('authToken'); // Obtiene el token del almacenamiento local
+        const token = Cookies.get('authToken'); // Obtiene el token del almacenamiento local
         console.log('Token:', token); // Imprime el token en la consola
         const response = await apiURL.post("logout/", {}, {
             headers: {
                 Authorization: `Token ${token}` // Envia el token en el encabezado de la solicitud
             }
         });
-        localStorage.removeItem('authToken'); // Elimina el token del almacenamiento local
+        Cookies.remove('authToken'); // Elimina el token del almacenamiento local
         return response.data;
     } catch (error) {
         throw error;
     }
+};
+
+export const checkAuth = () => {
+    const token = Cookies.get('authToken');
+    return token ? true : false;
 };

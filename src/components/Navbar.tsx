@@ -5,7 +5,7 @@ import { faHome, faRightToBracket, faRightFromBracket, faAddressCard } from '@fo
 const Navbar: React.FC<{ isLoggedIn: boolean, handleLogout: () => void }> = ({ isLoggedIn, handleLogout }) => {
     return (
         <nav>
-            <Link to="/"><FontAwesomeIcon icon={faHome}/>Home</Link>
+            <Link to="/"><FontAwesomeIcon icon={faHome}/>Sistema Básico de Administración Contable</Link>
             {isLoggedIn ? (
                 <>
                     <button onClick={handleLogout}><FontAwesomeIcon icon={faRightFromBracket} /> Logout</button>

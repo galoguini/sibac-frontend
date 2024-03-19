@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; //Link
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; //Link
 import { Toaster, toast } from 'react-hot-toast';
 import { logout } from './api/auth';
+import { checkAuth } from './api/auth';
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -11,6 +12,11 @@ import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const isLoggedIn = checkAuth();
+    setIsLoggedIn(isLoggedIn);
+}, []);
 
   const handleLogout = async () => {
     try {
@@ -29,8 +35,8 @@ function App() {
         <Navbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
         <Routes>
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/registro" element={<Registro />} />
+          <Route path="/login" element={!isLoggedIn ? <Login setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/" />} />
+          <Route path="/registro" element={!isLoggedIn ? <Registro /> : <Navigate to="/" />} />
         </Routes>
 
       </Router>
